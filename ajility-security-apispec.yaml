@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: Ajility OAuth API
+  description: 'OpenAPI Specification for the OAuth API .'
+  version: V1
+  termsOfService: https://www.incomm.com/about/policies/incomm-website-policies/
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email: test@example.com
+  license:
+    name: John Doe
+    url: http://www.example.com/support
+externalDocs:
+  description: Find out more 
+  url: http://example.com
+servers: 
+  - url:  https://api.example.com/ajility/v1/security
+    description: The production API server.
+  - url: https://api-uat.example.com/ajility/v1/security
+    description: The UAT API server.
+# Describe your paths here
+paths:
+  /token:
+    post:
+      operationId: generate token
+      parameters:
+      - name: grant_type
+        example: client_credentials
+        in: query
+        schema:
+          type: string
+      - name: scope
+        in: query
+        schema:
+          type: string
+        example: read
+      - name: client_id
+        in: header
+        schema:
+          type: string
+        example: read  
+      - name: client_secret
+        in: header
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+        200:
+         description: OK
+        401:
+         description: Not authenticated
+        403:
+         description: Access token does not have the required scope
+  /revokeToken:
+    post:
+      operationId: revoke token
+      parameters:
+      - name: access_token
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+        200:
+         description: OK

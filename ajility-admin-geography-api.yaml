@@ -1,0 +1,316 @@
+openapi: 3.0.1
+info:
+  title: Ajility Admin Geograhy API
+  description: 'Manage geograhies for Collection Management'
+  termsOfService: http://example.com
+  contact:
+    email: xyz@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about us
+  url: http://example.com
+servers:
+- url: https://rcm-uat.example.com/rcm/v1
+- url: https://rcm.example.com/rcm/v1
+
+tags:
+- name: Managegeograhies
+  description: Manage geograhies
+   
+
+security:
+  - Ajility_oauth2: []
+
+paths:
+  /areaCode:
+    get:
+      tags:
+      - Managegeograhies
+      summary: Get area code POJO for specified area code string.
+      operationId: getAreaCode
+      parameters:
+      - name: name
+        in: path
+        description: area code string.
+        example: 201
+        required: true
+        schema:
+              type: string
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AjCoreAreaCode'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'        
+      x-codegen-request-body-name: body         
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - responseCode
+        - responseText
+      properties:
+       transactionId:
+        type: string
+       responseCode:
+        type: string
+        example: 29
+       responseText:
+        type: string
+        example: System Error
+    AjCoreAreaCode:
+      type: object
+      properties:
+        areaCodeId:
+         type: integer
+        code:
+         type: string
+        country:
+         $ref: '#/components/schemas/AjCoreCountry'
+        states:
+         $ref: '#/components/schemas/set'
+        counties:
+         $ref: '#/components/schemas/set'
+        cities:
+         $ref: '#/components/schemas/set'  
+        timezones:
+         type: array
+         items:
+          $ref: '#/components/schemas/AjCoreTimezone'
+        geoImport:
+         $ref: '#/components/schemas/AjCoreGeographyImport'  
+        refId:
+         type: integer 
+    set:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+    AjCoreCountry:
+     type: object
+     properties:
+       countryId:
+        type: integer
+        format: int32
+       alpha2:
+        type: string
+       alpha3:
+        type: string
+       name:
+        type: string
+       description:
+        type: string    
+       cbrCountryCode:
+        type: string
+       phoneInternationAccess:
+        type: string
+       phoneNationAccess:  
+        type: string
+       phoneMaxDigits:
+        type: integer
+       phoneMinDigits:
+        type: integer
+       phoneCountryCode:
+        type: string
+       phoneNumberingPlan:
+        type: string
+       phoneNumberingPlanId:
+        type: string
+       timezones:
+        type: array
+        uniqueItems: true
+        items:
+          $ref: '#/components/schemas/AjCoreTimezone'
+       currencies:
+        $ref: '#/components/schemas/AjCoreCurrency'
+       languages:
+        $ref: '#/components/schemas/AjCoreLanguage' 
+       geoImport:
+        $ref: '#/components/schemas/AjCoreGeographyImport'  
+       refId:
+        type: integer
+    AjCoreGeographyImport:
+     type: object
+     properties:
+       geographyImportId:
+        type: integer
+       processInitiatedBy:
+        type: string
+       processStartDateTime:
+        type: string
+        format: date
+       processEndDateTime:
+        type: string
+        format: date
+       docName:
+        type: string
+       logName:
+        type: string
+       importStatusId:
+        type: integer
+        #$ref: '#/components/schemas/UIFImportStatusType'
+       importStatusDateTime:
+        type: string
+        format: date
+       failureReasonId:
+        type: integer
+        #$ref: '#/components/schemas/UIFImportFailReasonType'  
+       jobMonitorId:
+        type: integer
+       productName:
+        type: string
+       productVersion:
+        type: string
+       metadataVersion:
+        type: string
+       description:
+        type: string
+       dateTimeGenerated:
+        type: string
+        format: date
+       numberCountriesRemoved:
+        type: integer       
+       numberCountriesUpdated:
+        type: integer
+       numberCountriesAdded:
+        type: integer    
+       numberStatesRemoved:
+        type: integer
+       numberStatesUpdated:
+        type: integer
+       numberStatesAdded:
+        type: integer
+       numberCountiesRemoved:
+        type: integer
+       numberCountiesUpdated:
+        type: integer
+       numberCountiesAdded:
+        type: integer
+       numberCitiesRemoved:
+        type: integer
+       numberCitiesUpdated:
+        type: integer       
+       numberCitiesAdded:
+        type: integer
+       numberPostalCodesRemoved:
+        type: integer    
+       numberPostalCodesUpdated:
+        type: integer
+       numberPostalCodesAdded:
+        type: integer
+       numberAreaCodesRemoved:
+        type: integer
+       numberAreaCodesUpdated:
+        type: integer
+       numberAreaCodesAdded:
+        type: integer
+       numberTimeZonesRemoved:
+        type: integer
+       numberTimeZonesUpdated:
+        type: integer
+       numberTimeZonesAdded:
+        type: integer    
+       numberCurrenciesRemoved:
+        type: integer
+       numberCurrenciesUpdated:
+        type: integer
+       numberCurrenciesAdded:
+        type: integer
+       numberLanguagesRemoved:
+        type: integer
+       numberLanguagesUpdated:
+        type: integer
+       numberLanguagesAdded:
+        type: integer
+    AjCoreTimezone:
+     type: object
+     properties:
+       timezoneId:
+        type: integer
+       name:
+        type: string
+       abbrev:
+        type: string
+       jvmTimezone:
+        type: string
+       description:
+        type: string
+       geoImport:
+        $ref: '#/components/schemas/AjCoreGeographyImport'    
+       refId:
+        type: integer
+    AjCoreCurrency:
+     type: object
+     properties:
+       currencyId:
+        type: integer
+       alpha3:
+        type: string
+       name:
+        type: string
+       num:
+        type: integer
+       geoImport:
+        $ref: '#/components/schemas/AjCoreGeographyImport'   
+       refId:
+        type: integer  
+    AjCoreLanguage:
+     type: object
+     properties:
+       languageId:
+        type: integer
+       alpha2:
+        type: string
+       alpha3:
+        type: string
+       name:
+        type: string
+       description:
+        type: string
+       geoImport:
+        $ref: '#/components/schemas/AjCoreGeographyImport'   
+       refId:
+        type: integer         
+  securitySchemes:
+    Ajility_oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /security/token
+          scopes:
+            {}
