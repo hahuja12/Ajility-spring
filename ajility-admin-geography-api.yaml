@@ -25,13 +25,14 @@ tags:
   description: Manage States and Provinces.
 - name: GeographicRestrictions
   description: Manage Geographic restrictions.  
-   
+- name: Miscellaneous
+  description: API used by multiple functionality.   
 
 security:
   - rcm_oauth2: []
 
 paths:
-  /areaCode:
+  /areaCodes/{areaCodeId}:
     get:
       tags:
       - AreaCode
@@ -81,7 +82,196 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'        
+                $ref: '#/components/schemas/ErrorResponse'   
+    put:
+      tags:
+      - AreaCode
+      summary: Updates an existing areacode.
+      operationId: updateAreaCode
+      parameters:
+      - name: areacodeId
+        in: path
+        description: area code Id.
+        example: 201
+        required: true
+        schema:
+              type: integer
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      requestBody:
+       description: Area code to be saved
+       content:
+         application/json:
+          schema:
+           $ref: '#/components/schemas/AreaCode'
+       required: true    
+      responses:
+        200:
+          description: successful operation
+          
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'  
+    delete:
+      tags:
+      - AreaCode
+      summary: Delete an areacode from the database..
+      operationId: removeAreaCode
+      parameters:
+      - name: areacodeId
+        in: path
+        description: area code Id.
+        example: 201
+        required: true
+        schema:
+              type: integer
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'               
+  /areacodes:
+    get:
+      tags:
+      - AreaCode
+      summary: Get pages of area codes based on search criterion.
+      operationId: findAreaCode
+      parameters:
+      - name: areaCode
+        in: query
+        description: search for specific area code.
+        example: 201
+        required: false
+        schema:
+              type: integer
+      - name: state
+        in: query
+        description: search for specific State/province.
+        example: NEW JERSEY
+        required: false
+        schema:
+              type: string
+      - name: timeZone
+        in: query
+        description: search for specific timezone.
+        example: Eastern Time (-5)
+        required: false
+        schema:
+              type: string
+      - name: notAssignedTimeZone
+        in: query
+        description: search for areaCode for which no Timezone is assigned.
+        example: true
+        required: false
+        schema:
+              type: boolean                        
+      - name: limit
+        in: query
+        description: number of results to return.
+        example: 10
+        required: false
+        schema:
+              type: integer 
+      - name: offset
+        in: query
+        description: starting row number of result
+        example: 20
+        required: false
+        schema:
+              type: integer                
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+               type: array
+               items:
+                $ref: '#/components/schemas/AreaCodeCore'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse' 
     post:
       tags:
       - AreaCode
@@ -132,114 +322,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'        
-    put:
-      tags:
-      - AreaCode
-      summary: Updates an existing areacode.
-      operationId: updateAreaCode
-      parameters:
-      - name: x-auth-token
-        in: header
-        description: authentication token
-        required: true
-        schema:
-            type: string
-      requestBody:
-       description: Area code to be saved
-       content:
-         application/json:
-          schema:
-           $ref: '#/components/schemas/AreaCode'
-       required: true    
-      responses:
-        200:
-          description: successful operation
-          
-        400:
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        504:
-          description: Application Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        401:
-          description: Unauthorized  
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        500:
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'    
-    delete:
-      tags:
-      - AreaCode
-      summary: Delete an areacode from the database..
-      operationId: removeAreaCode
-      parameters:
-      - name: areacodeId
-        in: path
-        description: area code Id.
-        example: 201
-        required: true
-        schema:
-              type: integer
-      - name: x-auth-token
-        in: header
-        description: authentication token
-        required: true
-        schema:
-            type: string
-      responses:
-        200:
-          description: successful operation
-          
-        400:
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        504:
-          description: Application Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        401:
-          description: Unauthorized  
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        500:
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'        
-  /postalCode: 
+      
+  /postalCodes:
     get:
       tags:
       - PostalCode
-      summary: Get postal code object for specified postal code string.
-      operationId: getPostalCode
+      summary: Get pages of postal codes based on search criterion.
+      operationId: findPostalCodes
       parameters:
-      - name: name
-        in: path
-        description: postal code string.
-        example: 30000
-        required: true
+      - name: postalCode
+        in: query
+        description: search for specific postal code.
+        example: 201
+        required: false
+        schema:
+              type: integer
+      - name: timeZone
+        in: query
+        description: search for specific timezone.
+        example: Eastern Time (-5)
+        required: false
         schema:
               type: string
+      - name: notAssignedTimeZone
+        in: query
+        description: search for postal codes for which no Timezone is assigned.
+        example: true
+        required: false
+        schema:
+              type: boolean                        
+      - name: limit
+        in: query
+        description: number of results to return.
+        example: 10
+        required: false
+        schema:
+              type: integer 
+      - name: offset
+        in: query
+        description: starting row number of result
+        example: 20
+        required: false
+        schema:
+              type: integer                
       - name: x-auth-token
         in: header
         description: authentication token
@@ -252,6 +377,8 @@ paths:
           content:
             application/json:
               schema:
+               type: array
+               items:
                 $ref: '#/components/schemas/PostalCode'
         400:
           description: Invalid request
@@ -276,7 +403,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'        
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
       - PostalCode
@@ -326,6 +453,57 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /postalCode/{code}: 
+    get:
+      tags:
+      - PostalCode
+      summary: Get postal code object for specified postal code string.
+      operationId: getPostalCode
+      parameters:
+      - name: code
+        in: path
+        description: postal code string.
+        example: 30000
+        required: true
+        schema:
+              type: string
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostalCode'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/ErrorResponse'        
     put:
       tags:
@@ -333,6 +511,13 @@ paths:
       summary: Updates an existing postal code.
       operationId: updatePostalCode
       parameters:
+      - name: code
+        in: path
+        description: postal code string.
+        example: 30000
+        required: true
+        schema:
+              type: string
       - name: x-auth-token
         in: header
         description: authentication token
@@ -380,7 +565,7 @@ paths:
       summary: Delete a postal code from the database.
       operationId: removePostalCode
       parameters:
-      - name: postalCodeId
+      - name: code
         in: path
         description: The Id of the postal code to delete
         example: 30000
@@ -628,6 +813,107 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /cities:
+    get:
+      tags:
+      - Miscellaneous
+      summary: Retrieve the cities that are available for a specific state.
+      operationId: getCities
+      parameters:
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      - name: stateId
+        in: path
+        description: The ID for the state or province
+        required: true
+        schema:
+            type: integer
+            format: int32      
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Hashmap of cityId integer key and City object. 
+                additionalProperties:
+                  $ref: '#/components/schemas/City'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'  
+  /timezones:
+    get:
+      tags:
+      - Miscellaneous
+      summary: Retrieve the all available timezones.
+      operationId: getTimeZones
+      parameters:
+      - name: x-auth-token
+        in: header
+        description: authentication token
+        required: true
+        schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Hashmap of cityId integer key and City object. 
+                items:
+                  $ref: '#/components/schemas/TimeZone'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        504:
+          description: Application Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'              
 components:
   schemas:
     ErrorResponse:
@@ -659,6 +945,31 @@ components:
          type: array
          items:
           type: string
+    AreaCodeCore:
+     type: object
+     properties:
+        areaCodeId:
+         type: integer
+        code:
+         type: string
+        country:
+         $ref: '#/components/schemas/Country'
+        states:
+         type: array
+         items:
+          type: string
+        counties:
+         type: array
+         items:
+          type: string
+        cities:
+         type: array
+         items:
+          type: string    
+        timezones:
+         type: array
+         items:
+          $ref: '#/components/schemas/TimeZone'
     PostalCode:
      type: object
      properties:
@@ -672,8 +983,8 @@ components:
        timezones:
          type: array
          items:
-          type: string
-       noTimeZones:
+          $ref: '#/components/schemas/TimeZone'
+       notAssignedTimeZones:
         type: boolean       
     PostalCodeSummary:
      type: object
@@ -775,7 +1086,26 @@ components:
         type: object
         additionalProperties:
          $ref: '#/components/schemas/PostalCodeSummary'  
-    
+    TimeZone:
+     type: object
+     properties:
+       timezoneId:
+        type: integer
+       name:
+        type: string
+       jvmTimezone:
+        description: ID for the java timezone class
+        type: string
+       abbrev:
+        type: string
+       utcOffset:
+        type: string
+       usesDST:
+        type: boolean
+       systemReferenceTimeOffset:
+        type: integer
+        format: int64
+        description: The current offset between the server's system reference time and the timezone's time.      
     
     GeographyRestriction:
      type: object
